@@ -1,30 +1,14 @@
-// class Contact{
-//     constructor(ContactType, ContactFname, ContactLname, ContactEmail, ContactAge){
-//         this.ContactType = ContactType;        
-//         this.ContactFname = ContactFname;
-//         this.ContactLname = ContactLname;
-//         this.ContactEmail = ContactEmail;
-//         this.ContactAge = ContactAge;
-//     }
-//     static isSFObj() {
-//         return true; 
-//     }
-//     getFullName(separator) {
-//         console.log(this);
-//         return this.ContactFname+separator+this.ContactLname;
-//     }
-// }
 
-// let tc = new Contact("tc", "Akshay", "Srivastava", "aksh@test.com", 27);
-// let nontc = new Contact("nontc", "Akash", "Singh", "akash@test.com", 23);
-// // console.log(getFullName());
+console.log("Start");
 
-// let someObj = {
-//     name: 'Akshay',
-//     age: 27
-// }
+setTimeout(() => {
+    console.log("Time in 10sec");
+}, 10000);
 
+console.log("Before expensive task");
 
-// console.log(typeof tc);
-// console.log(typeof someObj);
+for(let i=0; i<10; i++){
+    console.log(i);
+}
 
+console.log("After expensive task");
