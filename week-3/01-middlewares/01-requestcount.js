@@ -11,16 +11,11 @@ let requestCount = 0;
 // requestCount variable
 
 function requestsLogger(req,res,next) {
-  let newCount = ++requestCount;
-  console.log(newCount);
+  requestCount = requestCount+1;
   next();
 }
 
 app.use(requestsLogger);
-
-app.get("/", (req, res) => {
-  res.send("Deployed");
-});
 
 app.get("/user", function (req, res) {
   res.status(200).json({ name: "john" });
@@ -34,8 +29,5 @@ app.get("/requestCount", function (req, res) {
   res.status(200).json({ requestCount });
 });
 
-app.listen(3000, function () {
-  console.log("Listening on 3000");
-});
 
 module.exports = app;

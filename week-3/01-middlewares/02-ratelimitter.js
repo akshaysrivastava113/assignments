@@ -14,7 +14,32 @@ const app = express();
 let numberOfRequestsForUser = {};
 setInterval(() => {
     numberOfRequestsForUser = {};
-}, 1000)
+}, 1000);
+
+function logUser(userId){
+  let currentCount = 0;
+  if(numberOfRequestsForUser[userId]){
+    currentCount = numberOfRequestsForUser[userId];
+  }
+  numberOfRequestsForUser[userId] = currentCount+1;
+}
+
+function requestsLimiter(req,res,next) {
+
+    let userId = req.headers['user-id'];
+    logUser(userId);
+    if(numberOfRequestsForUser[userId] > 5){
+        res.status(404).end();
+    }else{ 
+        next();
+    }
+}
+
+app.use(requestsLimiter);
+
+// app.get('/', (req,res) => {
+//     res.send(numberOfRequestsForUser);
+// })
 
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
@@ -23,5 +48,9 @@ app.get('/user', function(req, res) {
 app.post('/user', function(req, res) {
   res.status(200).json({ msg: 'created dummy user' });
 });
+
+// app.listen(3000, () => {
+//     console.log('Listening on 3000');
+// })
 
 module.exports = app;
