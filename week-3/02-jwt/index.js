@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
+const zod = require('zod');
 const jwtPassword = 'secret';
-
 
 /**
  * Generates a JWT for a given username and password.
@@ -13,10 +13,32 @@ const jwtPassword = 'secret';
  *                        Returns null if the username is not a valid email or
  *                        the password does not meet the length requirement.
  */
+
+const emailSchema = zod.string().email();
+const passwordSchema = zod.string().min(6);
+
 function signJwt(username, password) {
     // Your code here
+    const usernameSafe = emailSchema.safeParse(username);
+    const passwordSafe = passwordSchema.safeParse(password);
+    console.log(usernameSafe);
+    if(!(usernameSafe.success==true && passwordSafe.success==true)){
+        return null
+    }
+
+    let token = null;
+    try {
+        token = jwt.sign({username: usernameSafe.data, password: passwordSafe.data}, jwtPassword);
+    } catch(e){
+        console.log(e);
+    }
+    return token;
 }
 
+// const token = signJwt('kirat@gmail.com', '123456' );
+// console.log(token);
+// const decoded = jwt.decode(token);
+// console.log(decoded);
 /**
  * Verifies a JWT using a secret key.
  *
@@ -27,6 +49,20 @@ function signJwt(username, password) {
  */
 function verifyJwt(token) {
     // Your code here
+    let isTokenValid = false;
+    let decodedUser;
+    try {
+        decodedUser = jwt.verify(token, jwtPassword);
+        if(decodedUser){
+            isTokenValid = true;
+        } else {
+            isTokenValid = false;
+        }
+    } catch(e){
+        console.log(e);
+        isTokenValid = false;
+    }
+    return isTokenValid;
 }
 
 /**
@@ -38,11 +74,24 @@ function verifyJwt(token) {
  */
 function decodeJwt(token) {
     // Your code here
+    let isTokenValid = false;
+    let decodedUser;
+    try {
+        decodedUser = jwt.decode(token);
+        if(decodedUser){
+            isTokenValid = true;
+        } else {
+            isTokenValid = false;
+        }
+    } catch(e){
+        console.log(e);
+        isTokenValid= false;
+    }
+    return isTokenValid;
 }
 
-
 module.exports = {
-  signJwt,
+  signJwt, 
   verifyJwt,
   decodeJwt,
   jwtPassword,
